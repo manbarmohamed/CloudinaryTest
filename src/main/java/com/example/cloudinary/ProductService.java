@@ -21,17 +21,14 @@ public class ProductService {
 
 
     public ProductDTO createProduct(ProductCreateDTO productCreateDTO, List<MultipartFile> images) {
-        // Mapper les données de ProductCreateDTO à l'entité Product
         Product product = productMapper.createDTOToEntity(productCreateDTO);
-        log.info("Produit avant sauvegarde : " + product);
+        log.info("Produit avant sauvegarde : {}", product);
 
         List<Image> uploadedImages = new ArrayList<>();
         if (images != null && !images.isEmpty()) {
             for (MultipartFile image : images) {
-                // Upload de l'image sur Cloudinary
                 Map<String, String> uploadResult = cloudinaryService.uploadImage(image);
 
-                // Créer une instance de l'entité Image
                 Image uploadedImage = new Image();
                 uploadedImage.setUrl(uploadResult.get("url"));
                 uploadedImage.setPublicId(uploadResult.get("public_id"));
@@ -41,13 +38,12 @@ public class ProductService {
             }
         }
 
-        // Associer les images au produit
         product.setImages(uploadedImages);
 
         // Sauvegarder le produit avec ses images dans la base de données
         Product savedProduct = productRepository.save(product);
 
-        log.info("Produit après sauvegarde : "+savedProduct);
+        log.info("Produit après sauvegarde : {}", savedProduct);
 
         // Retourner un DTO du produit
         return productMapper.toDTO(savedProduct);
