@@ -20,6 +20,7 @@ public interface ProductMapper {
     @Mapping(target = "images", ignore = true)
     Product createDTOToEntity(ProductCreateDTO createDTO);
 
+
     ProductCreateDTO toCreateDTO(Product product);
 
     // Méthodes de mappage pour les images
